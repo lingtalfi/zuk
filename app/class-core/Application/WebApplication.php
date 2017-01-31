@@ -26,6 +26,7 @@ class WebApplication extends Application
             WebApplicationHooksService::feedRouters($routers);
             foreach ($routers as $router) {
                 if (is_string($controller = $router->getController($request))) {
+                    Application::set('CONTROLLER', $controller);
                     $this->executeController($controller, $request);
                     return;
                 }

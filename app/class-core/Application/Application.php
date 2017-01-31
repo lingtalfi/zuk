@@ -31,4 +31,9 @@ class Application
         Logger::log("Key $key not found", 'critical');
         throw new ApplicationVariableNotFound("Key $key not found");
     }
+
+    public static function set($key, $value)
+    {
+        self::$config[$key] = $value;
+    }
 }
