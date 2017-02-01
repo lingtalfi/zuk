@@ -39,7 +39,7 @@ define('APP_ROOT', __DIR__);
 // APPLICATION CONFIG (meant to be updated by an admin website)
 //--------------------------------------------
 $conf = [];
-require_once APP_ROOT . '/config/webconfig.php';
+require_once APP_ROOT . '/config/app-config.php';
 Application::setConfig($conf);
 
 

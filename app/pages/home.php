@@ -3,9 +3,7 @@ I'm home
 <?php
 
 
-use My\MyLayout;
-
-
+use My\Layout\MyLayout;
 
 a(MyLayout::create()->getName());
 MyLayout::create()->init()->render();

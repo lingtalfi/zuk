@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Prefix\Laws\Layout;
+namespace Laws\Layout;
 
 
 interface LayoutInterface
 {
     public function getName();
+
 }
