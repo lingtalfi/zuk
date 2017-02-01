@@ -5,5 +5,8 @@ I'm home
 
 use My\MyLayout;
 
+
+
+a(MyLayout::create()->getName());
 MyLayout::create()->init()->render();
 

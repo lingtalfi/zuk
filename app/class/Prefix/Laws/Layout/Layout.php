@@ -8,11 +8,12 @@ use Prefix\Laws\Layout\Exception\LayoutFileNotFoundException;
 use Prefix\Laws\Widget\WidgetInterface;
 use Prefix\Laws\WidgetGroup\WidgetGroupInterface;
 
-class Layout
+class Layout implements LayoutInterface
 {
     private $layoutFile;
     private $widgets;
     private $widgetGroups;
+    private $name;
 
 
     public function __construct()
@@ -27,6 +28,14 @@ class Layout
         return new static();
     }
 
+    public function getName()
+    {
+        if (null === $this->name) {
+            $this->name = get_called_class();
+        }
+        return $this->name;
+    }
+
 
     public function init()
     {
@@ -36,17 +45,11 @@ class Layout
         return $this;
     }
 
-    public function setLayoutFile($f)
-    {
-        $this->layoutFile = $f;
-    }
-
 
     public function render()
     {
         $f = $this->layoutFile;
         if (file_exists($f)) {
-            // collect the widgets/widget groups content recursively
             $s = $this->parseLayoutContent(file_get_contents($f));
             return $s;
         } else {
