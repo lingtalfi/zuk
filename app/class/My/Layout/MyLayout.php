@@ -4,21 +4,16 @@
 namespace My\Layout;
 
 
-use Core\Laws\Loader\Loader;
-use Laws\Layout\Layout;
+use Core\Laws\Layout\AppLayout;
 use Laws\WidgetGroup\WidgetGroup;
 use My\Widget\FooterWidget;
 use My\Widget\SocialLinksWidget;
 
-class MyLayout extends Layout
+class MyLayout extends AppLayout
 {
 
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setLoader(new Loader());
-    }
+
 
     protected function prepareWidgetGroups()
     {

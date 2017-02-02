@@ -3,8 +3,15 @@ I'm home
 <?php
 
 
+use Module\Application\Layout\OneColumnLayout;
 use My\Layout\MyLayout;
 
-a(MyLayout::create()->getName());
-MyLayout::create()->init()->render();
+
+
+
+
+//MyLayout::create()->init()->render();
+
+OneColumnLayout::create()->init()->render();
+
 

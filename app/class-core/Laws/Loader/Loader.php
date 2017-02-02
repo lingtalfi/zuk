@@ -4,6 +4,7 @@
 namespace Core\Laws\Loader;
 
 use Core\Application\Application;
+use Core\Laws\Util\AppLawsHelper;
 use Laws\Layout\LayoutInterface;
 use Laws\Loader\LoaderInterface;
 use Laws\Util\LawsHelper;
@@ -12,43 +13,42 @@ use Laws\WidgetGroup\WidgetGroupInterface;
 
 
 /**
- * This loader loads from those locations (and in this order):
- *
- * - application (with a module)
- * - application (without a module)
- * - module (only if the caller is a module)
- *
- *
- * The application structure looks like this if there is a module
- *
- * - themes/$themeName/$moduleName/laws   (same structure as the laws directory of the module structure)
- *
- *
- * - themes/$themeName/_no_module/laws   (same structure as the laws directory of the module structure)
  *
  *
  *
+ * This loader has two modes, depending on whether the <theme object> (see LoaderInterface source code)
+ * belongs to a module or not.
  *
  *
- * The module structure should look like this:
+ * If the <theme object> belongs to a module:
+ * ==============================================
  *
- * - class-modules/MyModule/themes/
- *          - $themeName        (default theme name is default)
- *              - laws/
- *                  - layouts/
- *                      - OneColumnLayout.tpl
- *                      - $controllerName.OneColumnLayout.tpl       (use this notation to be controller specific)
- *                  - widgetgroups/
- *                      - $widgetGroupName.tpl
- *                      - $controllerName.$widgetGroupName.tpl      (use this notation to be controller specific)
- *                  - widgets/
- *                      - $widgetName.tpl
- *                      - $controllerName.$widgetName.tpl           (use this notation to be controller specific)
+ * The loader will try those locations, in the given order
+ *
+ *
+ * - app/themes/$themeName/$moduleName/laws/
+ * - class-modules/MyModule/themes/$themeName/laws/
+ *
+ * the laws directory structure is represented by the following example:
+ *
+ * - laws/
+ *      - layouts/
+ *          - OneColumnLayout.tpl
+ *          - $controllerName.OneColumnLayout.tpl       (use this notation to be controller specific)
+ *      - widgetgroups/
+ *          - $widgetGroupName.tpl
+ *          - $controllerName.$widgetGroupName.tpl      (use this notation to be controller specific)
+ *      - widgets/
+ *          - $widgetName.tpl
+ *          - $controllerName.$widgetName.tpl           (use this notation to be controller specific)
  *
  *
  *
  *
+ * If the <theme object> does not belong to a module:
+ * ==============================================
  *
+ * - themes/$themeName/_no_module/laws/   (same structure as the laws directory above)
  *
  *
  *
@@ -62,18 +62,29 @@ class Loader implements LoaderInterface
      */
     public function loadLayout(LayoutInterface $layout)
     {
+
+
+        $moduleName = AppLawsHelper::getModuleName($layout);
         $controllerName = Application::get('CONTROLLER');
-        $d = $this->getLawsDir($layout);
         $layoutName = LawsHelper::getShortName($layout);
+        $d = $this->getApplicationLawsDir($moduleName);
 
         $f = $d . '/layouts/' . $this->applyControllerPrefix($layoutName, $controllerName) . '.tpl';
-        a($f);
         if (false === file_exists($f)) {
             $f = $d . '/layouts/' . $layoutName . '.tpl';
-            a($f);
+            if (false !== $moduleName && false === file_exists($f)) {
+                $d = $this->getModuleLawsDir($moduleName);
+                $f = $d . '/layouts/' . $this->applyControllerPrefix($layoutName, $controllerName) . '.tpl';
+                if (false === file_exists($f)) {
+                    $f = $d . '/layouts/' . $layoutName . '.tpl';
+                }
+            }
         }
 
-        az("end");
+        if (file_exists($f)) {
+            return $f;
+        }
+        return false;
     }
 
 
@@ -98,32 +109,29 @@ class Loader implements LoaderInterface
     //------------------------------------------------------------------------------/
     //
     //------------------------------------------------------------------------------/
-    /**
-     * @return false|string
-     */
-    private function getModuleName($objectInstance)
+    private function getApplicationLawsDir($moduleName)
     {
-        return false;
-    }
-
-
-    private function getLawsDir($objectInstance)
-    {
-        $file = APP_ROOT . "/themes/";
-        $m = $this->getModuleName($objectInstance);
-        if (false === $m) {
-            $m = "_no_module";
+        $file = APP_ROOT . "/themes/" . Application::get('THEME') . '/';
+        if (false === $moduleName) {
+            $moduleName = "_no_module";
         }
-        $file .= $m . "/laws";
+        $file .= $moduleName . "/laws";
         return $file;
     }
 
-    private function applyControllerPrefix($file, $controllerName)
+    private function getModuleLawsDir($moduleName)
+    {
+        return APP_ROOT . "/class-modules/" . $moduleName . "/themes/" . Application::get('THEME') . '/laws';
+    }
+
+    private function applyControllerPrefix($string, $controllerName)
     {
         if (null === $controllerName) {
-            return $file;
+            return $string;
         }
-        return $controllerName . '.' . $file;
+        return $controllerName . '.' . $string;
     }
+
+
 }
 

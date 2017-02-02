@@ -4,6 +4,7 @@
 namespace Laws\WidgetGroup;
 
 
+use Laws\Node\NodeInterface;
 use Laws\Widget\WidgetInterface;
 
 class WidgetGroup implements WidgetGroupInterface
@@ -11,6 +12,7 @@ class WidgetGroup implements WidgetGroupInterface
     private $name;
     private $widgets;
     private $widgetGroups;
+    private $parent;
 
     public function __construct()
     {
@@ -35,13 +37,29 @@ class WidgetGroup implements WidgetGroupInterface
 
     public function bindWidget(WidgetInterface $w)
     {
+        $w->setParent($this);
         $this->widgets[$w->getName()] = $w;
     }
 
     public function bindWidgetGroup(WidgetGroupInterface $wg)
     {
+        $wg->setParent($this);
         $this->widgetGroups[$wg->getName()] = $wg;
     }
+
+
+    public function setParent(NodeInterface $node)
+    {
+        $this->parent = $node;
+        return $this;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+
 
 
 
@@ -52,4 +70,6 @@ class WidgetGroup implements WidgetGroupInterface
     {
         $this->name = $name;
     }
+
+
 }

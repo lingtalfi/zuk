@@ -4,12 +4,14 @@
 namespace Laws\Widget;
 
 
+use Laws\Node\NodeInterface;
 use Laws\Util\LawsHelper;
 
 class Widget implements WidgetInterface
 {
 
     private $name;
+    private $parent;
 
 
     public static function create()
@@ -25,7 +27,7 @@ class Widget implements WidgetInterface
         return $this->name;
     }
 
-    public function init()
+    public function init($configurationId = null)
     {
         // TODO: Implement init() method.
     }
@@ -36,12 +38,33 @@ class Widget implements WidgetInterface
     }
 
 
+    public function setParent(NodeInterface $node)
+    {
+        $this->parent = $node;
+        return $this;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+
+
+
     //------------------------------------------------------------------------------/
     //
     //------------------------------------------------------------------------------/
+    public function getConfiguration($configurationId = null)
+    {
+        $conf = [];
+
+    }
+
     public function setName($name)
     {
         $this->name = $name;
         return $this;
     }
+
 }

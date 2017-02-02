@@ -4,8 +4,9 @@
 namespace Laws\Layout;
 
 
-interface LayoutInterface
+use Laws\Node\NodeInterface;
+
+interface LayoutInterface extends NodeInterface
 {
-    public function getName();
 
 }

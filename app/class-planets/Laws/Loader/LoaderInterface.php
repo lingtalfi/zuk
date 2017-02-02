@@ -8,6 +8,19 @@ use Laws\Layout\LayoutInterface;
 use Laws\Widget\WidgetInterface;
 use Laws\WidgetGroup\WidgetGroupInterface;
 
+
+/**
+ * The goal of the loader is to return the path of a file, given an <theme object>.
+ * A <theme object> can be one of:
+ *
+ * - LayoutInterface
+ * - WidgetGroupInterface
+ * - WidgetInterface
+ *
+ *
+ *
+ *
+ */
 interface LoaderInterface
 {
 

@@ -78,11 +78,13 @@ class Layout implements LayoutInterface
 
     public function bindWidgetGroup(WidgetGroupInterface $wg)
     {
+        $wg->setParent($this);
         $this->widgetGroups[$wg->getName()] = $wg;
     }
 
     public function bindWidget(WidgetInterface $w)
     {
+        $w->setParent($this);
         $this->widgets[$w->getName()] = $w;
     }
 
